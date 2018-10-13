@@ -50,8 +50,12 @@ void adcollect(void)
   //AD[3] = (AD_Channel(3)+AD_Channel(3)+AD_Channel(3)+AD_Channel(3)+AD_Channel(3))/5;
   AD[2] = (AD_Channel(2)+AD_Channel(2)+AD_Channel(2)+AD_Channel(2)+AD_Channel(2))/5;
   
-  AD[0] = (AD_Channel(0)+AD_Channel(0)+AD_Channel(0)+AD_Channel(0)+AD_Channel(0))/5;
+  AD[0] = (AD_Channel(0)+AD_Channel(0)+AD_Channel(0)+AD_Channel(0)+AD_Channel(0))/5-76;
   AD[1] = (AD_Channel(1)+AD_Channel(1)+AD_Channel(1)+AD_Channel(1)+AD_Channel(1))/5;
   //可以考虑加滤波算法
-
+  if(AD[0]>5000)
+  {
+    AD[0]=0;
+  }
+  
 }

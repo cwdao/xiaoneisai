@@ -13,7 +13,7 @@
 //Magnet_Reed
 uint8 Stop_Flag = 0;       //停车标志位
 uint16 servotest;          //舵机测试量
-uint16 Motor_Test=30;      //电机测试量
+uint16 Motor_Test=15;      //电机测试量
 uint16 stopCnt;
 
 //计时时间
@@ -21,7 +21,7 @@ uint16 g_time = 0;
 
 
 //舵机PD控制参数
-float turn_p=16;
+float turn_p=13;
 float turn_d=80;//80
 float Kp,Kd;
 uint8 lose_flag=0;
@@ -59,8 +59,8 @@ void pit0_isr(void)
 
   //JM_STATUS_init();
   //控制量计算  第一行为开环   注释行为闭环控制（前期可不用），两者只需用一个即可
- Car_Run_openloop();
-// Car_Run_closedloop();
+  //Car_Run_openloop();
+  Car_Run_closedloop();
 
   //舵机控制函数
   Car_Turn();
@@ -80,7 +80,7 @@ void Car_Run_openloop(void)
   }
   else
   {
-    SET_PWM_MOT(200);
+    SET_PWM_MOT(300);
   }
 
 }
@@ -89,7 +89,7 @@ void Car_Run_closedloop(void)
 {
   
   //速度反馈采集
-  g_countervalue = -Get_Counter_Value();
+  g_countervalue = Get_Counter_Value();
   sPID.vi_FeedBack = g_countervalue;
   
   if(g_time>500)          //2.5s后发车
@@ -105,9 +105,9 @@ void Car_Run_closedloop(void)
         sPID.vi_Ref = 20;
     }
   }
-//   sPID.vi_Ref  = Motor_Test;
-  SET_PWM_MOT(-V_PIDCalc(&sPID));
-//  SET_PWM_MOT(Motor_Test);
+  sPID.vi_Ref  = Motor_Test;
+  SET_PWM_MOT(V_PIDCalc(&sPID));
+  //SET_PWM_MOT(Motor_Test);
  
 }
 
@@ -176,7 +176,7 @@ void Magnet_detect(void)
   }
   if(stopCnt>100)
   {
- // Stop_Flag = 1;
+  Stop_Flag = 1;
   }
 }
 

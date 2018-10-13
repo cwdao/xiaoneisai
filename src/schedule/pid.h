@@ -9,7 +9,7 @@
 #define __PID_H__
 
 /******************************************************************************/
-#define VV_MAX 999 		 //速度PID，调节最大值
+#define VV_MAX 300 		 //速度PID，调节最大值
 #define VV_MIN 0	    	 //速度PID，调节最小值
 #define VV_DEADLINE 0	         //速度PID，设置死区范围
 

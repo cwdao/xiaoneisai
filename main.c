@@ -9,8 +9,8 @@
 
 **********************************************************************/
 #include "common.h"
-int servo_testtest = 2340;
-int motor_testtest = 180;
+int servo_testtest = 2339;
+int motor_testtest = 30;
 int main(void)
 {
   
