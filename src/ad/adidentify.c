@@ -17,7 +17,7 @@ float pre_middle_final = 0;
 float Linear_fit;
 uint16 AD_left;
 uint16 AD_right;
-uint8 Curve_Flag=0;        //弯道标志
+int Curve_Flag=0;        //弯道标志
 
 /**********************************************************
 Function Name:sqrt
@@ -52,13 +52,20 @@ Notes:   只用了两个电感
 void adidentify(void)
 {
   
-  //AD_right=AD[0]+AD[2];
-  //AD_left=AD[6]+AD[4];
+  AD_right=AD[0]+AD[2];
+  AD_left=AD[6]+AD[4];
   //AD_right1=AD[2];
   //AD_left1=AD[4];
+  if (AD[Right]<=75)
+  {
+    AD[Right]=0;
+  }
+  else 
+  {
+   AD[Right]=AD[Right]-75;
+  }
   
-  
-  if(AD[2]<250||AD[4]<260)
+  if((AD[0]<105||AD[6]<75))
   {
     lose_flag=1;
   }
@@ -69,13 +76,13 @@ void adidentify(void)
   
   //弯道直道判断
 
-  if(ABS(AD[2]-AD[4])<100)       //式中300可修改
+  if(ABS(AD[0]-AD[6])>100 || ABS(AD[2]-AD[4])>200)       //式中300可修改
   {
-    Curve_Flag=0;
+    Curve_Flag=1;
   }
   else
   {
-    Curve_Flag=1;
+    Curve_Flag=0;
   }
   
   
@@ -83,10 +90,10 @@ void adidentify(void)
   {
     if(Curve_Flag)      //弯道偏差量计算  ABS(AD[Left]-AD[Right])>150
     {
-      if(AD[4]-AD[2]>0)                                            
-        Deviation=-90000*(AD[Left]-AD_right)/(AD[Left]+AD_right)/100;     //右偏
+      if(AD[Left]-AD[Right]>0)                                            
+        Deviation=-15000*(AD[Left]-AD[Right])/(AD[Left]+AD[Right])/100;     //右偏
       else
-        Deviation=90000*(AD[Left]-AD_right)/(AD[Left]+AD_right)/100;      //左偏
+        Deviation=15000*(AD[Left]-AD[Right])/(AD[Left]+AD[Right])/100;      //左偏
     }
     else
     {
@@ -96,12 +103,13 @@ void adidentify(void)
   }
   else// lose_flag==1  AD[Left]<10||AD[Right]<10  (AD[Left]+AD[Right]>80)
   {
-    if(AD[4]>AD[2])
+    
+    if(AD[Left]>AD[Right]||(AD[0]<AD[6]))
     {
       Deviation = -9000;
     }
     else
-      Deviation = 9000; 
+      Deviation = 9000;
   }
 
   Pre_Deviation=Deviation;
@@ -144,7 +152,7 @@ void Caculation(void)
   }
 
   //弯道直道判断
-  //AD0&AD4是最左边和最右边的电感
+  //AD0&AD6是最左边和最右边的电感
   if(ABS(AD[0]-AD[6])<30)       //式中300可修改
   {
     Curve_Flag=0;

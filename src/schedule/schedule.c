@@ -59,8 +59,8 @@ void pit0_isr(void)
 
   //JM_STATUS_init();
   //控制量计算  第一行为开环   注释行为闭环控制（前期可不用），两者只需用一个即可
- //Car_Run_openloop();
-  Car_Run_closedloop();
+ Car_Run_openloop();
+// Car_Run_closedloop();
 
   //舵机控制函数
   Car_Turn();
@@ -80,7 +80,7 @@ void Car_Run_openloop(void)
   }
   else
   {
-    SET_PWM_MOT(250);
+    SET_PWM_MOT(200);
   }
 
 }
@@ -176,7 +176,7 @@ void Magnet_detect(void)
   }
   if(stopCnt>100)
   {
-  Stop_Flag = 1;
+ // Stop_Flag = 1;
   }
 }
 
