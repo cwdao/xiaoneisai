@@ -12,8 +12,8 @@
 
 //Magnet_Reed
 uint8 Stop_Flag = 0;       //停车标志位
-uint16 servotest;
-uint16 Motor_Test=30;
+uint16 servotest;          //舵机测试量
+uint16 Motor_Test=30;      //电机测试量
 uint16 stopCnt;
 
 //计时时间
@@ -22,8 +22,8 @@ uint16 g_time = 0;
 
 //舵机PD控制参数
 float turn_p=16;
-float turn_d=80;
-  float Kp,Kd;
+float turn_d=80;//80
+float Kp,Kd;
 uint8 lose_flag=0;
 
 //电机PID控制参数
@@ -74,13 +74,13 @@ void pit0_isr(void)
 
 void Car_Run_openloop(void)
 {
-  if(g_time<300 || Stop_Flag)
+  if(g_time<300 || Stop_Flag)     //g_time 计时时间  Stop_Flag 停车标志位
   {
     SET_PWM_MOT(0);
   }
   else
   {
-    SET_PWM_MOT(-350);
+    SET_PWM_MOT(200);
   }
 
 }
@@ -157,6 +157,7 @@ void Car_Turn(void)
 /*=============================Magnet_detect===========================*/
 void Magnet_detect(void)
 {
+  
   if(g_time>10000)              //发车后7.5s内不检测停车
   {
     if(REED_1_Status==0||REED_2_Status==0)     //干簧管检测停车
@@ -164,7 +165,7 @@ void Magnet_detect(void)
       Stop_Flag=1;
     }
   }
-  if(AD[Left]+AD[Middle]+AD[Right] <10 && g_time>1000)
+  if(AD[Left]+AD[2]+AD[4]+AD[Right] <10 && g_time>1000)     // if(AD[Left]+AD[Middle]+AD[Right] <10 && g_time>1000)
   {
 
       stopCnt++;

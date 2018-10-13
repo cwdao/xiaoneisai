@@ -51,9 +51,17 @@ Notes:   只用了两个电感
 ***********************************************************/
 void adidentify(void)
 {
-
-  Pre_Deviation=Deviation;
-  if((AD[Left]<10||AD[Right]<10)&&AD[Middle]<70)
+  
+  AD_right=AD[0]+AD[2];
+  AD_left=AD[6]+AD[4];
+  //AD_right1=AD[2];
+  //AD_left1=AD[4];
+  if (AD[Right]<=76)
+  {
+    AD[Right]=0;
+  }
+  
+  if(AD[Left]<40||AD[Right]<80)
   {
     lose_flag=1;
   }
@@ -64,7 +72,7 @@ void adidentify(void)
   
   //弯道直道判断
 
-  if(ABS(AD[Left]-AD[Right])<100)       //式中300可修改
+  if(ABS(AD[Left]-AD[Right])<180)       //式中300可修改
   {
     Curve_Flag=0;
   }
@@ -74,31 +82,32 @@ void adidentify(void)
   }
   
   
-  if(lose_flag==0)   
+  if(lose_flag==0)   //AD[Left]>10 && AD[Right]>10
   {
-    if(Curve_Flag)
+    if(Curve_Flag)      //弯道偏差量计算  ABS(AD[Left]-AD[Right])>150
     {
-      if(AD[Left]-AD[Right]>0)
-        Deviation=-(AD[Left]-AD[Right])*(AD[Left]-AD[Right])/100;
+      if(AD[Left]-AD[Right]>0)                                            
+        Deviation=-90000*(AD[Left]-AD[Right])/(AD[Left]+AD[Right])/100;     //右偏
       else
-        Deviation=(AD[Left]-AD[Right])*(AD[Left]-AD[Right])/100; 
+        Deviation=90000*(AD[Left]-AD[Right])/(AD[Left]+AD[Right])/100;      //左偏
     }
     else
     {
-      Deviation=0;
+      Deviation=0;   //不是弯道  ABS(AD[Left]-AD[Right])<100
     }
     
   }
-  else// (AD[Left]+AD[Right]>80)
+  else// lose_flag==1  AD[Left]<10||AD[Right]<10  (AD[Left]+AD[Right]>80)
   {
     if(AD[Left]>AD[Right])
     {
-      Deviation = -10000;
+      Deviation = -9000;
     }
     else
-      Deviation = 10000;
+      Deviation = 9000;
   }
 
+  Pre_Deviation=Deviation;
   
   // Caculation();
   
@@ -117,30 +126,29 @@ void Caculation(void)
 //归一化处理
   
 
-  AD_left=AD[0]+AD[1];
-  AD_right=AD[3]+AD[4];
+
   //AD_sum=AD[0]+AD[1]+AD[2]+AD[3]+AD[4];
 
-  if(AD[4]<40)
+  if(AD[6]<40)
   {
-  AD[4] = 0;
+    AD[6] = 0;
   }
   else
-   AD[4] = AD[4]-40; 
+    AD[6] = AD[6]-40; 
   Pre_Deviation=Deviation;
   
-  if(AD[0]<40||AD[4]<40)
+  if(AD[0]<40||AD[6]<40)
   {
-  lose_flag=1;
+    lose_flag=1;
   }
   else
   {
-  lose_flag=0;
+    lose_flag=0;
   }
 
   //弯道直道判断
   //AD0&AD4是最左边和最右边的电感
-  if(ABS(AD[0]-AD[4])<30)       //式中300可修改
+  if(ABS(AD[0]-AD[6])<30)       //式中300可修改
   {
     Curve_Flag=0;
   }
@@ -162,9 +170,9 @@ void Caculation(void)
     }
     
   }
-  else if(AD[0]+AD[4]>40)
+  else if(AD[0]+AD[6]>40)
   {
-  if(AD[0]>AD[4])
+  if(AD[0]>AD[6])
   {
     Linear_fit = 500;
   }

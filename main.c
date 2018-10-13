@@ -9,8 +9,11 @@
 
 **********************************************************************/
 #include "common.h"
+int servo_testtest = 2340;
+int motor_testtest = 180;
 int main(void)
 {
+  
   DisableInterrupts;           //关闭中断
   
   sysinit();                   //系统初始化，不要随意修改该函数
@@ -27,8 +30,8 @@ int main(void)
   
   while(1)                     //空循环，因为定时中断已经打开，所以每隔5ms会执行一次schedule.c中的pit0_isr();
   {
-//         SET_PWM_MOT(200);
-//         SET_PWM_SVO(3500);
+         //SET_PWM_MOT(motor_testtest);
+         //SET_PWM_SVO(servo_testtest);
   }
 }
 
