@@ -80,7 +80,7 @@ void Car_Run_openloop(void)
   }
   else
   {
-    SET_PWM_MOT(300);
+    SET_PWM_MOT(350);
   }
 
 }
