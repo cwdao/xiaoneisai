@@ -84,16 +84,18 @@ void adidentify(void)
     if(ABS(AD[2]-AD[4])>400)      //ÍäµÀÆ«²îÁ¿¼ÆËã  ABS(AD[Left]-AD[Right])>150
     {
       if(AD[4]-AD[2]>0)                                            
-        Deviation=-5000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //ÓÒÆ«  /100
+        Deviation=-5000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //×ó×ª  /100
       else
-        Deviation=5000*(AD[2]-AD[4])/(AD[4]+AD[2]);      //×óÆ«   /100
+        Deviation=5000*(AD[2]-AD[4])/(AD[4]+AD[2]);      //ÓÒ×ª   /100
     }
-    else if(ABS(AD[2]-AD[4])>120)
+    else if(AD[2]-AD[4]>100||AD[4]-AD[2]>80) 
     {
       if(AD[4]-AD[2]>0)                                            
-        Deviation=-4000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //ÓÒÆ«  /100
+        Deviation=-3200*(AD[4]-AD[2])/(AD[4]+AD[2]);     //×ó×ª  /100
       else
-        Deviation=4000*(AD[2]-AD[4])/(AD[4]+AD[2]);      //×óÆ«   /100
+        //if(AD[2]-AD[4]<=100&&AD[2]-AD[4]>=80)
+        Deviation=3500*(AD[2]-AD[4])/(AD[4]+AD[2]);  //ÓÒ×ª   /100
+      
     }
     else
     {
@@ -101,16 +103,35 @@ void adidentify(void)
     }
     
   }
-  else// lose_flag==1  AD[Left]<10||AD[Right]<10  (AD[Left]+AD[Right]>80)
+  else                                  // lose_flag==1  AD[Left]<10||AD[Right]<10  (AD[Left]+AD[Right]>80)
   {
-    if(AD[6]>AD[0])
+    
+    if(AD[0]<10&&AD[6]<10)
     {
-      Deviation = -1500;
+      
+      if(AD[4]>AD[2])
+      {
+        Deviation = -1500;
+      }
+      else
+      {
+        Deviation = 1500;
+      }
     }
-    else
-      Deviation = 1500; 
+    else 
+    {
+      if(AD[6]>AD[0])
+      {
+        Deviation = -1500;
+      }
+      else
+        Deviation = 1500;
+    }
   }
-
+  if(AD[0]<5&&AD[2]<5&&AD[4]<5&&AD[6]<5)
+      {
+         Deviation=Pre_Deviation;
+      }
   Pre_Deviation=Deviation;
   
   // Caculation();

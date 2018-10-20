@@ -13,7 +13,7 @@
 //Magnet_Reed
 uint8 Stop_Flag = 0;       //停车标志位
 uint16 servotest;          //舵机测试量
-uint16 Motor_Test=15;      //电机测试量
+uint16 Motor_Test=16;      //电机测试量
 uint16 stopCnt;
 
 //计时时间
