@@ -57,19 +57,21 @@ void adidentify(void)
   //AD_right1=AD[2];
   //AD_left1=AD[4];
   
-  
-  if(AD[2]<240||AD[4]<250)
-  {
-    lose_flag=1;
-  }
-  else
-  {
-    lose_flag=0;
-  }
-  
+  float sum,value;
+  sum=AD[0]+AD[2]+AD[4]+AD[6];
+  value=1850;
+//  if(AD[2]<240||AD[4]<240)
+//  {
+//    lose_flag=1;
+//  }
+//  else
+//  {
+//    lose_flag=0;
+//  }
+    
   //弯道直道判断
 
-  if(ABS(AD[2]-AD[4])<150)       //式中300可修改
+  if(sum/value<=0.28)       //式中300可修改
   {
     Curve_Flag=0;
   }
@@ -78,60 +80,56 @@ void adidentify(void)
     Curve_Flag=1;
   }
   
-  
-  if(lose_flag==0)   //AD[Left]>10 && AD[Right]>10
+  if((sum/value<=0.15) && (AD[2]<240||AD[4]<240))   //AD[2]<240||AD[4]<240
   {
-    if(ABS(AD[2]-AD[4])>400)      //弯道偏差量计算  ABS(AD[Left]-AD[Right])>150
+    if(ABS(AD[2]-AD[4])>400)      //中弯
     {
       if(AD[4]-AD[2]>0)                                            
-        Deviation=-5000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
+        Deviation=-5000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  
       else
-        Deviation=5000*(AD[2]-AD[4])/(AD[4]+AD[2]);      //右转   /100
+        Deviation=5200*(AD[2]-AD[4])/(AD[4]+AD[2]);      //右转   
     }
-    else if(AD[2]-AD[4]>100||AD[4]-AD[2]>80) 
+    else if(ABS(AD[2]-AD[4])>100)   //小弯
     {
       if(AD[4]-AD[2]>0)                                            
-        Deviation=-3200*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
+        Deviation=-3500*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
       else
-        //if(AD[2]-AD[4]<=100&&AD[2]-AD[4]>=80)
-        Deviation=3500*(AD[2]-AD[4])/(AD[4]+AD[2]);  //右转   /100
+        Deviation=3600*(AD[2]-AD[4])/(AD[4]+AD[2]);  //右转   /100
       
     }
     else
     {
-      Deviation=0;   //不是弯道  ABS(AD[Left]-AD[Right])<100
+      Deviation=0;   //直道
     }
     
   }
-  else                                  // lose_flag==1  AD[Left]<10||AD[Right]<10  (AD[Left]+AD[Right]>80)
+  else                               // AD[2]、AD[4]<240   大弯
   {
+    if(AD[6]>AD[0])
+    {
+      Deviation = -1500;
+    }
+    else
+    {
+      Deviation = 1600;
+    }
     
-    if(AD[0]<10&&AD[6]<10)
-    {
-      
-      if(AD[4]>AD[2])
-      {
-        Deviation = -1500;
-      }
-      else
-      {
-        Deviation = 1500;
-      }
-    }
-    else 
-    {
-      if(AD[6]>AD[0])
-      {
-        Deviation = -1500;
-      }
-      else
-        Deviation = 1500;
-    }
+//    else 
+//    {
+//      if(AD[6]>AD[0])             // 当2、4大小接近时用0、6判断
+//      {
+//        Deviation = -1500;
+//      }
+//      else
+//        Deviation = 1600;
+//    }
   }
-  if(AD[0]<5&&AD[2]<5&&AD[4]<5&&AD[6]<5)
+  
+  if(AD[0]<10&&AD[2]<20&&AD[4]<20&&AD[6]<10)
       {
          Deviation=Pre_Deviation;
       }
+  
   Pre_Deviation=Deviation;
   
   // Caculation();

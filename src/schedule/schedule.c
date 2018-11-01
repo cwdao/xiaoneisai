@@ -13,7 +13,7 @@
 //Magnet_Reed
 uint8 Stop_Flag = 0;       //停车标志位
 uint16 servotest;          //舵机测试量
-uint16 Motor_Test=16;      //电机测试量
+uint16 Motor_Test=20;      //电机测试量
 uint16 stopCnt;
 
 //计时时间
@@ -21,7 +21,7 @@ uint16 g_time = 0;
 
 
 //舵机PD控制参数
-float turn_p=13;
+float turn_p=15;
 float turn_d=80;//80
 float Kp,Kd;
 uint8 lose_flag=0;

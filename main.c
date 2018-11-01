@@ -10,7 +10,7 @@
 **********************************************************************/
 #include "common.h"
 int servo_testtest = 2339;
-int motor_testtest = 30;
+int motor_testtest = 100;
 int main(void)
 {
   

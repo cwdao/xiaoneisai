@@ -7,6 +7,9 @@
 #include "common.h"
 #include "adcollect.h"
 uint16 AD[10];
+
+int AD_max,AD_min;
+
 /**********************************************************
 Function Name: AD_Channel
 Description: ADÍ¨µÀÑ¡Ôñ
@@ -57,5 +60,12 @@ void adcollect(void)
   {
     AD[0]=0;
   }
+  
+//  AD_max=800;
+//  AD_min=0;
+//  AD[0]=AD[0]*(AD[0]-AD_min)/(AD_max-AD_min);
+//  AD[2]=AD[2]*(AD[2]-AD_min)/(AD_max-AD_min);
+//  AD[4]=AD[4]*(AD[4]-AD_min)/(AD_max-AD_min);
+//  AD[6]=AD[6]*(AD[6]-AD_min)/(AD_max-AD_min);
   
 }
