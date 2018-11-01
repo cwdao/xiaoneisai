@@ -29,8 +29,8 @@ void PIDInit(void)
     sPID.vi_PreError = 0 ;
     sPID.vi_PreDerror = 0 ;
 
-    sPID.v_Kp = 55;
-    sPID.v_Ki = 20;
+    sPID.v_Kp = 15;
+    sPID.v_Ki = 7;
     sPID.v_Kd = 1;
 
     sPID.vl_PreU = 0;

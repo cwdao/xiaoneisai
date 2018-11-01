@@ -21,8 +21,8 @@ uint16 g_time = 0;
 
 
 //舵机PD控制参数
-float turn_p=15;
-float turn_d=80;//80
+float turn_p=8;    //6 8
+float turn_d=0;//80
 float Kp,Kd;
 uint8 lose_flag=0;
 
@@ -88,11 +88,13 @@ void Car_Run_openloop(void)
 void Car_Run_closedloop(void)
 {
   
+  int pwm =0;
+  
   //速度反馈采集
   g_countervalue = Get_Counter_Value();
   sPID.vi_FeedBack = g_countervalue;
   
-  if(g_time>500)          //2.5s后发车
+  if(g_time>200)          //2.5s后发车
   {
     if(Stop_Flag || g_time>10000)
     {
@@ -100,12 +102,30 @@ void Car_Run_closedloop(void)
     }
     else
     {
-      sPID.vi_Ref = 30;
-      if(AD[Left]+AD[Right]<200)
+      sPID.vi_Ref = 35;
+      if(AD[0]+AD[2]+AD[4]+AD[6]<=1400)
         sPID.vi_Ref = 20;
     }
   }
-  sPID.vi_Ref  = Motor_Test;
+  
+  
+  //pid调节
+//  if(g_time<=100)        
+//  {
+//     sPID.vi_Ref = 0;
+//  }
+//    if(g_time>100 && g_time < 600)        
+//  {
+//     sPID.vi_Ref = 70;
+//  }
+//   if(g_time >= 600)        
+//  {
+//     sPID.vi_Ref = 0;
+//  }
+  
+  //sPID.vi_Ref  = Motor_Test;
+  
+ // pwm = 300;
   SET_PWM_MOT(V_PIDCalc(&sPID));
   //SET_PWM_MOT(Motor_Test);
  
@@ -120,22 +140,32 @@ void Car_Turn(void)
 {
   
   
-    if(AD[Left]+AD[Right]<100)
-  {
-    Kp=turn_p*3;
-    Kd=turn_d*3;
-  }
-  else if(AD[Left]+AD[Right]<200)
-  {
-    Kp=turn_p*2;
-    Kd=turn_d*2;
-  }
-  else
-  {
-    Kp=turn_p;
-    Kd=turn_d;
-  }
+//    if(AD[Left]+AD[Right]<100)
+//  {
+//    Kp=turn_p*3;
+//    Kd=turn_d*3;
+//  }
+//  else if(AD[Left]+AD[Right]<200)
+//  {
+//    Kp=turn_p*2;
+//    Kd=turn_d*2;
+//  }
+//  else
+//  {
+//    Kp=turn_p;
+//    Kd=turn_d;
+//  }
   
+  if(ABS(AD[2]-AD[4])>=0)
+  {
+    Kp=6;
+    Kd=20;
+  }
+  else if(AD[0]+AD[2]+AD[4]+AD[6]<=1800)
+  {
+    Kp=10;
+    Kd=0;
+  }
   servo=RUDDER_MIDDLE_TURN+(int)(Deviation*Kp/100)+(int)((Deviation-Pre_Deviation)*Kd/100);
 
   //这一段不能去掉，保护舵机   防止打到极限位置，损坏舵机

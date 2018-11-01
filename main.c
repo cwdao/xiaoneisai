@@ -9,9 +9,9 @@
 
 **********************************************************************/
 #include "common.h"
-int servo_testtest = 2339;
-int motor_testtest = 100;
-int main(void)
+float servo_testtest = 2342;
+int motor_testtest = 150;
+ int main(void)
 {
   
   DisableInterrupts;           //πÿ±’÷–∂œ

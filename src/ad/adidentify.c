@@ -62,7 +62,7 @@ void adidentify(void)
  
   int sum=AD[0]+AD[2]+AD[4]+AD[6];
   
-  if((AD[2]<240||AD[4]<240))
+  if(sum<=100)
   {
     lose_flag=1;
   }
@@ -85,26 +85,27 @@ void adidentify(void)
   
   if(lose_flag==0)   //AD[Left]>10 && AD[Right]>10
   {
-    if(ABS(AD[2]-AD[4])>400)      //弯道偏差量计算  ABS(AD[Left]-AD[Right])>150
+    if(AD[0] + AD[6] + AD[2] + AD[4]<=1800 )      //弯道偏差量计算  ABS(AD[Left]-AD[Right])>150
     {
       if(AD[4]-AD[2]>0)                                            
-        Deviation=-5000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
+        Deviation=-10000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
       else
-        Deviation=5250*(AD[2]-AD[4])/(AD[4]+AD[2]);      //右转   /100
+        Deviation=10000*(AD[2]-AD[4])/(AD[4]+AD[2]);      //右转   /100
     }
-    else if(ABS(AD[2]-AD[4])>100) //AD[2]-AD[4]>100||AD[4]-AD[2]>80
+    else  //AD[2]-AD[4]>100||AD[4]-AD[2]>80
     {
       if(AD[4]-AD[2]>0)                                            
-        Deviation=-3500*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
+        Deviation=-2500*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
+      
       else
         //if(AD[2]-AD[4]<=100&&AD[2]-AD[4]>=80)
-        Deviation=3650*(AD[2]-AD[4])/(AD[4]+AD[2]);  //右转   /100
+        Deviation=2500*(AD[2]-AD[4])/(AD[4]+AD[2]);  //右转   /100
       
     }
-    else
-    {
-      Deviation=0;   //不是弯道  ABS(AD[Left]-AD[Right])<100
-    }
+//    else
+//    {
+//      Deviation=0;   //不是弯道  ABS(AD[Left]-AD[Right])<100
+//    }
     
   }
   else                                  // lose_flag==1  AD[Left]<10||AD[Right]<10  (AD[Left]+AD[Right]>80)
@@ -124,21 +125,26 @@ void adidentify(void)
 //    }
 //    else 
 //    {
-      if(AD[6]>AD[0])
-      {
-        Deviation = -1700;
-      }
-      else
-        Deviation = 1700;
+//      if(AD[6]>AD[0])
+//      {
+//        Deviation = -1700;
+//      }
+//      else
+//        Deviation = 1700;
 //    }
+    if(Pre_Deviation>0)
+      Deviation = 6000;
+    else
+       Deviation = -6000;
+    
   }
 //  
-  if(AD[0]<10&&AD[2]<30&&AD[4]<30&&AD[6]<10
-    &&(ABS(AD[0]-AD[6])<5)&&(ABS(AD[2]-AD[4])<5))
-      {  flag++;
-         if(flag==1) Z=Pre_Deviation;
-         Deviation=Pre_Deviation;
-      }
+//  if(AD[0]<30&&AD[2]<30&&AD[4]<30&&AD[6]<30
+//    &&(ABS(AD[0]-AD[6])<5)&&(ABS(AD[2]-AD[4])<5))
+//      {  flag++;
+//         if(flag==1) Z=Pre_Deviation;
+//         Deviation=Pre_Deviation;
+//      }
   
 //  if(flag>5){flag=0;
 //  if(Z>0) Deviation=1600;
