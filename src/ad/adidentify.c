@@ -17,7 +17,10 @@ float pre_middle_final = 0;
 float Linear_fit;
 uint16 AD_left;
 uint16 AD_right;
-uint8 Curve_Flag=0;        //弯道标志
+uint8 Curve_Flag=0;
+float Z=0;
+int flag=0;
+//弯道标志
 
 /**********************************************************
 Function Name:sqrt
@@ -56,9 +59,10 @@ void adidentify(void)
   //AD_left=AD[6]+AD[4];
   //AD_right1=AD[2];
   //AD_left1=AD[4];
+ 
+  int sum=AD[0]+AD[2]+AD[4]+AD[6];
   
-  
-  if(AD[2]<240||AD[4]<240)
+  if((AD[2]<240||AD[4]<240))
   {
     lose_flag=1;
   }
@@ -86,15 +90,15 @@ void adidentify(void)
       if(AD[4]-AD[2]>0)                                            
         Deviation=-5000*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
       else
-        Deviation=5200*(AD[2]-AD[4])/(AD[4]+AD[2]);      //右转   /100
+        Deviation=5250*(AD[2]-AD[4])/(AD[4]+AD[2]);      //右转   /100
     }
-    else if(ABS(AD[2]-AD[4])>80) //AD[2]-AD[4]>100||AD[4]-AD[2]>80
+    else if(ABS(AD[2]-AD[4])>100) //AD[2]-AD[4]>100||AD[4]-AD[2]>80
     {
       if(AD[4]-AD[2]>0)                                            
         Deviation=-3500*(AD[4]-AD[2])/(AD[4]+AD[2]);     //左转  /100
       else
         //if(AD[2]-AD[4]<=100&&AD[2]-AD[4]>=80)
-        Deviation=3600*(AD[2]-AD[4])/(AD[4]+AD[2]);  //右转   /100
+        Deviation=3650*(AD[2]-AD[4])/(AD[4]+AD[2]);  //右转   /100
       
     }
     else
@@ -122,17 +126,24 @@ void adidentify(void)
 //    {
       if(AD[6]>AD[0])
       {
-        Deviation = -1500;
+        Deviation = -1700;
       }
       else
-        Deviation = 1600;
+        Deviation = 1700;
 //    }
   }
-  if(AD[0]==0&&AD[2]==0&&AD[4]==0&&AD[6]==0)
-      {
+//  
+  if(AD[0]<10&&AD[2]<30&&AD[4]<30&&AD[6]<10
+    &&(ABS(AD[0]-AD[6])<5)&&(ABS(AD[2]-AD[4])<5))
+      {  flag++;
+         if(flag==1) Z=Pre_Deviation;
          Deviation=Pre_Deviation;
-         Delay_T1_mS(500);   
       }
+  
+//  if(flag>5){flag=0;
+//  if(Z>0) Deviation=1600;
+//  else Deviation=-1500;
+//  }
   Pre_Deviation=Deviation;
   
   // Caculation();
